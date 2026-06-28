@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>習慣トラッカー</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <h1>習慣トラッカー</h1>
+      <span id="today-label" class="today-label"></span>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <section class="add-section">
+      <div class="add-row">
+        <input
+          type="text"
+          id="habit-input"
+          class="habit-input"
+          placeholder="新しい習慣を入力..."
+          maxlength="50"
+          autocomplete="off"
+        >
+        <button id="add-btn" class="btn btn-primary">追加</button>
+      </div>
+    </section>
+
+    <section id="overall-stats" class="overall-stats"></section>
+
+    <section id="habits-list" class="habits-list">
+      <p class="empty-message">習慣を追加してみましょう！</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
