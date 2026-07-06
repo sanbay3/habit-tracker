@@ -1,4 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="8" fill="#4f46e5"/>
-  <polyline points="7,17 13,23 25,10" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- 背景: オレンジ -->
+  <rect width="32" height="32" rx="8" fill="#f97316"/>
+  <!-- 外側の炎 (白) -->
+  <path d="M16 5
+           C16 5 23 12 23 18
+           C23 22.4 19.9 26 16 26
+           C12.1 26 9 22.4 9 18
+           C9 14.5 11 12 11 12
+           C11 14.5 12.5 16 12.5 16
+           C13 12 14.5 8 16 5 Z"
+        fill="white"/>
+  <!-- 内側の輝き (淡い黄) -->
+  <path d="M16 15
+           C16 15 19 17.5 19 20
+           C19 21.7 17.7 23 16 23
+           C14.3 23 13 21.7 13 20
+           C13 18.5 14 17 14 17
+           C14 18 14.8 18.5 14.8 18.5
+           C15.1 17 15.5 16 16 15 Z"
+        fill="#fed7aa"/>
 </svg>
