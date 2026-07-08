@@ -303,15 +303,19 @@ body {
   background: var(--cell-empty);
   cursor: pointer;
   transition: transform 0.12s, opacity 0.12s;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 2px;
 }
 
 .grid-cell.done {
   background: var(--cell-done);
 }
 
-.grid-cell.today {
-  outline: 2px solid var(--primary);
-  outline-offset: 1px;
+/* 今日のセル（未達成）: 薄インジゴで明確に識別 */
+.grid-cell.today:not(.done) {
+  background: var(--primary-light);
 }
 
 .grid-cell.future {
@@ -326,6 +330,33 @@ body {
   opacity: 0.8;
   z-index: 1;
   position: relative;
+}
+
+/* 日付番号 */
+.cell-day {
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 500;
+  color: rgba(100, 116, 139, 0.55);
+  pointer-events: none;
+  user-select: none;
+}
+
+.grid-cell.done .cell-day {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.grid-cell.today .cell-day {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.grid-cell.today.done .cell-day {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.grid-cell.future .cell-day {
+  color: rgba(100, 116, 139, 0.3);
 }
 
 /* ── Check button ──────────────────────────────── */

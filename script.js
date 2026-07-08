@@ -221,13 +221,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const monthlyRate = calcMonthlyRate(habit);
       const doneToday   = !!habit.records[today];
 
+      const [, todayM, todayD] = today.split('-');
+      const todayLabel = `${parseInt(todayM)}/${parseInt(todayD)}`;
+
       const gridHTML = gridDates.map(date => {
         const done     = !!habit.records[date];
         const isToday  = date === today;
         const isFuture = date > today;
         const cls = ['grid-cell', done && 'done', isToday && 'today', isFuture && 'future']
           .filter(Boolean).join(' ');
-        return `<div class="${cls}" data-id="${habit.id}" data-date="${date}" title="${date}"></div>`;
+        const dayNum = parseInt(date.split('-')[2], 10);
+        return `<div class="${cls}" data-id="${habit.id}" data-date="${date}" title="${date}"><span class="cell-day">${dayNum}</span></div>`;
       }).join('');
 
       const card = document.createElement('div');
@@ -249,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
         <button class="check-btn ${doneToday ? 'checked' : ''}" data-id="${habit.id}" data-date="${today}">
-          ${doneToday ? '✓ 今日達成済み' : '今日をチェック'}
+          ${doneToday ? `✓ 今日 (${todayLabel}) 達成済み` : `今日 (${todayLabel}) をチェック`}
         </button>
       `;
 
