@@ -137,20 +137,27 @@ body {
 .stats-card {
   background: var(--card-bg);
   border-radius: var(--radius);
-  padding: 1rem 1.25rem;
   box-shadow: var(--shadow);
-  display: flex;
-  gap: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
 }
 
 .stat-item {
-  flex: 1;
   text-align: center;
-  padding: 0 0.5rem;
+  padding: 0.875rem 0.5rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
-.stat-item + .stat-item {
-  border-left: 1px solid var(--border);
+.stat-item:nth-child(2),
+.stat-item:nth-child(4) {
+  border-right: none;
+}
+
+.stat-item:nth-child(3),
+.stat-item:nth-child(4) {
+  border-bottom: none;
 }
 
 .stat-value {
@@ -357,6 +364,22 @@ body {
 
 .grid-cell.future .cell-day {
   color: rgba(100, 116, 139, 0.3);
+}
+
+/* 月初・月末のパディングセル */
+.grid-cell.empty-cell {
+  background: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* グリッド上部の月ラベル */
+.grid-month-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
 }
 
 /* ── Check button ──────────────────────────────── */

@@ -39,20 +39,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
-   * Returns 35 date strings (5 weeks) starting from the Sunday
-   * four weeks before the Sunday of the current week.
+   * 当月のカレンダーグリッド用日付配列を返す。
+   * 月初が何曜日かに応じて先頭に null パディングを入れ、
+   * 行が 7 の倍数になるよう末尾にも null を補う。
    */
   function getGridDates() {
-    const today = new Date();
-    const dow   = today.getDay(); // 0=Sun … 6=Sat
-    const start = new Date(today);
-    start.setDate(today.getDate() - dow - 28);
+    const now        = new Date();
+    const year       = now.getFullYear();
+    const month      = now.getMonth();
+    const firstDow   = new Date(year, month, 1).getDay();       // 月初の曜日 (0=日)
+    const daysInMonth = new Date(year, month + 1, 0).getDate(); // 月の日数
+    const totalCells = Math.ceil((firstDow + daysInMonth) / 7) * 7;
 
     const dates = [];
-    for (let i = 0; i < 35; i++) {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
-      dates.push(toDateStr(d));
+    for (let i = 0; i < totalCells; i++) {
+      const dayNum = i - firstDow + 1;
+      if (dayNum < 1 || dayNum > daysInMonth) {
+        dates.push(null);
+      } else {
+        dates.push(toDateStr(new Date(year, month, dayNum)));
+      }
     }
     return dates;
   }
@@ -153,13 +159,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const today = new Date();
     const y     = today.getFullYear();
     const m     = today.getMonth() + 1;
-    const days  = today.getDate();
+    const days  = today.getDate(); // 月初から今日まで
     let done = 0;
     for (let i = 1; i <= days; i++) {
       const key = `${y}-${String(m).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
       if (habit.records[key]) done++;
     }
     return Math.round((done / days) * 100);
+  }
+
+  function calc30DayRate(habit) {
+    const base = new Date();
+    let done = 0;
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(base);
+      d.setDate(base.getDate() - i);
+      if (habit.records[toDateStr(d)]) done++;
+    }
+    return Math.round((done / 30) * 100);
   }
 
   // ── Rendering ──────────────────────────────────
@@ -180,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const doneToday  = habits.filter(h => h.records[today]).length;
     const avgWeekly  = Math.round(habits.reduce((s, h) => s + calcWeeklyRate(h), 0) / total);
     const avgMonthly = Math.round(habits.reduce((s, h) => s + calcMonthlyRate(h), 0) / total);
+    const avg30Day   = Math.round(habits.reduce((s, h) => s + calc30DayRate(h), 0) / total);
 
     overallStats.innerHTML = `
       <div class="stats-card">
@@ -194,6 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="stat-item">
           <div class="stat-value">${avgMonthly}%</div>
           <div class="stat-label">今月の平均</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">${avg30Day}%</div>
+          <div class="stat-label">直近30日</div>
         </div>
       </div>
     `;
@@ -221,10 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const monthlyRate = calcMonthlyRate(habit);
       const doneToday   = !!habit.records[today];
 
-      const [, todayM, todayD] = today.split('-');
-      const todayLabel = `${parseInt(todayM)}/${parseInt(todayD)}`;
+      const [todayY, todayM, todayD] = today.split('-');
+      const todayLabel  = `${parseInt(todayM)}/${parseInt(todayD)}`;
+      const monthHeader = `${todayY}年${parseInt(todayM)}月`;
 
       const gridHTML = gridDates.map(date => {
+        if (date === null) {
+          return `<div class="grid-cell empty-cell"></div>`;
+        }
         const done     = !!habit.records[date];
         const isToday  = date === today;
         const isFuture = date > today;
@@ -248,6 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="grid-wrapper">
           <div class="grid-inner">
+            <div class="grid-month-header">${monthHeader}</div>
             <div class="day-labels">${labelsHTML}</div>
             <div class="activity-grid">${gridHTML}</div>
           </div>
@@ -285,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const cell = e.target.closest('.grid-cell');
-    if (cell && !cell.classList.contains('future')) {
+    if (cell && !cell.classList.contains('future') && !cell.classList.contains('empty-cell')) {
       toggleRecord(cell.dataset.id, cell.dataset.date);
     }
   }
