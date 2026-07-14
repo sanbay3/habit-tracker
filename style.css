@@ -411,6 +411,19 @@ body {
   transform: scale(0.98);
 }
 
+/* ── Footer ────────────────────────────────────── */
+.app-footer {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.brand {
+  font-weight: 700;
+  color: var(--primary);
+}
+
 /* ── Responsive ────────────────────────────────── */
 @media (max-width: 400px) {
   .header-inner h1 {
